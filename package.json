@@ -1,0 +1,26 @@
+{
+  "name": "checkout-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "build:sdk": "esbuild src/sdk/src/index.js --bundle --minify --format=iife --global-name=MyCheckout --outfile=src/sdk/dist/sdk.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mercadopago": "^2.12.0",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.4",
+    "nodemon": "^3.1.14"
+  }
+}
