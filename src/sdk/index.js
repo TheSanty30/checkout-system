@@ -15,6 +15,7 @@
     border: "#d9dfee",
     surface: "#f8fafc",
     background: "#ffffff",
+    borderRadius: "12px",
   };
 
   const state = {
@@ -24,6 +25,7 @@
     loading: false,
     formReady: false,
     liveValidationBound: false,
+    currencySymbol: "S/",
   };
 
   // Estado de validez de los 3 campos iframe del SDK
@@ -78,6 +80,10 @@
       ...DEFAULT_THEME,
       ...(state.config?.theme || {}),
     };
+  }
+
+  function getCurrencySymbol(currencyId) {
+    return (currencyId || "PEN").toUpperCase() === "USD" ? "$" : "S/";
   }
 
   function loadStyles() {
@@ -265,6 +271,7 @@
     overlay.style.setProperty("--mp-border", theme.border);
     overlay.style.setProperty("--mp-surface", theme.surface);
     overlay.style.setProperty("--mp-background", theme.background);
+    overlay.style.setProperty("--mp-border-radius", theme.borderRadius);
   }
 
   function clearValidationErrors() {
@@ -375,6 +382,7 @@
       state.config.amount = quantity * price_unit;
     }
 
+    state.currencySymbol = getCurrencySymbol(config.currencyId);
     const amount = Number(state.config.amount).toFixed(2);
 
     overlay = document.createElement("div");
@@ -385,7 +393,6 @@
 
     modal.innerHTML = `
       <div class="mp-header">
-        <button class="mp-close-btn" id="mp-close-btn" aria-label="Cerrar">✕</button>
         <div class="mp-steps">
           <div class="mp-step active" id="step-0">
             <div class="mp-circle">1</div>
@@ -424,17 +431,17 @@
                   <div class="product-qty">Cantidad: ${escapeHtml(quantity)}</div>
                 </div>
 
-                <div class="product-price">S/ ${amount}</div>
+                <div class="product-price">${state.currencySymbol} ${amount}</div>
               </div>
 
               <div class="summary-lines">
                 <div class="line">
                   <span>Subtotal</span>
-                  <strong>S/ ${amount}</strong>
+                  <strong>${state.currencySymbol} ${amount}</strong>
                 </div>
                 <div class="line total">
                   <span>Total a pagar</span>
-                  <strong>S/ ${amount}</strong>
+                  <strong>${state.currencySymbol} ${amount}</strong>
                 </div>
               </div>
             </div>
@@ -566,6 +573,7 @@
 
       <div class="mp-footer">
         <button class="mp-btn" id="actionBtn">Continuar</button>
+        <button class="mp-btn-cancel" id="mp-cancel-btn">Cancelar y volver</button>
         <div class="secure-note">
           <span class="secure-icon">🔒</span>
           <span>Tu información está segura y protegida.</span>
@@ -597,9 +605,10 @@
       });
     }
 
-    const closeBtn = modal.querySelector("#mp-close-btn");
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
+    const cancelBtn = modal.querySelector("#mp-cancel-btn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         if (state.loading) return;
         close();
       });
@@ -787,7 +796,7 @@
 
           <div class="mp-detail-row">
             <span>Monto pagado:</span>
-            <strong>S/ ${Number(payment.amount || 0).toFixed(2)}</strong>
+            <strong>${state.currencySymbol} ${Number(payment.amount || 0).toFixed(2)}</strong>
           </div>
 
           <div class="mp-detail-row">
@@ -963,6 +972,7 @@
                     issuerId,
                     identificationType: data.identificationType,
                     identificationNumber: data.identificationNumber,
+                    currencyId: state.config.currencyId || "PEN",
                   }),
                 });
 
@@ -1133,7 +1143,7 @@
       btn.disabled = state.loading;
       btn.textContent = state.loading
         ? "Procesando..."
-        : `Pagar S/ ${Number(state.config?.amount || 0).toFixed(2)}`;
+        : `Pagar ${state.currencySymbol} ${Number(state.config?.amount || 0).toFixed(2)}`;
 
       btn.onclick = async () => {
         if (state.loading) return;

@@ -64,6 +64,7 @@ export async function createPayment(req, res) {
       reference,
       identificationType,
       identificationNumber,
+      currencyId,
     } = req.body;
 
     if (!amount || !token || !paymentMethodId || !payerEmail) {
@@ -84,6 +85,7 @@ export async function createPayment(req, res) {
       reference,
       identificationType,
       identificationNumber,
+      currencyId,
     });
 
     const normalized = normalizePayment(result);

@@ -7,64 +7,39 @@
   <link rel="stylesheet" href="/test.css" />
 </head>
 <body>
-  <button id="payBtn">Abrir pago</button>
+  <div style="display: flex; gap: 10px; padding: 20px;">
+    <button id="payBtnPen" class="btn">Pagar en Soles (PEN)</button>
+    <button id="payBtnUsd" class="btn">Pagar en Dólares (USD)</button>
+  </div>
 
   <script src="/sdk.js"></script>
   <script>
-    document.getElementById("payBtn").addEventListener("click", () => {
-MyCheckout.open({
-    // ─── PRODUCTO / PRECIO ─────────────────────────────────
-    price_unit: 199,          // (number, requerido si no pasa amount) Precio unitario
-    quantity:   5,            // (number, opcional, default: 1)       Cantidad
-    // amount: 995,           // (number, alternativo) Monto total directo.
-    //                        //   Si se pasa, ignora price_unit y quantity.
-    description: "Plan Enterprise",  // (string, requerido) Nombre del producto/plan
-    // ─── REFERENCIA ────────────────────────────────────────
-    reference: "ORD-1001",   // (string, opcional) Tu ID de orden interna.
-    //                        //   Llega como external_reference en la respuesta MP.
-    // ─── CALLBACKS ─────────────────────────────────────────
-    onSuccess: (data) => {
-      // Se ejecuta cuando el pago llega a un estado final confirmado por webhook.
-      // data contiene:
-      // {
-      //   id:               "123456789",       // ID del pago en MercadoPago
-      //   status:           "approved",        // approved | rejected | cancelled | ...
-      //   status_detail:    "accredited",      // Detalle del estado de MP
-      //   external_reference: "ORD-1001",      // Tu reference
-      //   transaction_amount: 995,             // Monto cobrado
-      //   payment_method_id:  "visa",          // Método de pago usado
-      //   payer_email:        "user@mail.com", // Email del pagador
-      //   updatedAt:          "2026-05-08T...",// Timestamp del último update
-      //   raw: { ...respuesta completa de MP },// Objeto completo de MP
-      // }
-      console.log("Pago exitoso:", data);
-      // ← AQUí el cliente guarda en su base de datos y continúa su flujo
-    },
-    onError: (error) => {
-      // Se ejecuta si el pago falla o hay un error de red/validación.
-      // error es un objeto Error estándar con .message
-      console.error("Error en el pago:", error);
-    },
-    onClose: () => {
-      // Se ejecuta cuando el usuario cierra el modal manualmente.
-      console.log("El usuario cerró el modal");
-    },
-    // ─── TEMA (todos opcionales) ────────────────────────────
-    theme: {
-      primary:      "#2fbf59",  // Color principal de botones
-      primaryHover: "#27aa4f",  // Hover del botón principal
-      success:      "#16a34a",  // Color de éxito
-      successSoft:  "#dcfce7",  // Fondo suave de éxito
-      error:        "#dc2626",  // Color de error
-      errorSoft:    "#fee2e2",  // Fondo suave de error
-      text:         "#111827",  // Color de texto principal
-      muted:        "#64748b",  // Texto secundario
-      border:       "#d9dfee",  // Bordes
-      surface:      "#f8fafc",  // Fondo de tarjetas
-      background:   "#ffffff",  // Fondo del modal
-    },
-  });
-    });
+    function openCheckout(currencyId) {
+      MyCheckout.open({
+        currencyId: currencyId, // 'PEN' o 'USD'
+        price_unit: currencyId === 'USD' ? 50 : 199,
+        quantity: 1,
+        description: currencyId === 'USD' ? "Plan Enterprise USD" : "Plan Enterprise PEN",
+        reference: "ORD-" + Math.floor(Math.random() * 10000),
+        onSuccess: (data) => {
+          console.log("Pago exitoso:", data);
+        },
+        onError: (error) => {
+          console.error("Error en el pago:", error);
+        },
+        onClose: () => {
+          console.log("El usuario cerró el modal");
+        },
+        theme: {
+          primary: currencyId === 'USD' ? "#3b82f6" : "#2fbf59", // Azul para USD, verde para PEN
+          primaryHover: currencyId === 'USD' ? "#2563eb" : "#22c55e",
+          borderRadius: "30px", // Personalización del redondeo
+        }
+      });
+    }
+
+    document.getElementById("payBtnPen").addEventListener("click", () => openCheckout('PEN'));
+    document.getElementById("payBtnUsd").addEventListener("click", () => openCheckout('USD'));
   </script>
 </body>
 </html>
