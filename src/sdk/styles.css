@@ -1,7 +1,35 @@
 /* ─── RESET & ISOLATION ──────────────────────────────────────────── */
-.mp-overlay,
-.mp-overlay * {
+.mp-overlay {
+  all: initial; /* Resetea todas las propiedades heredadas del sitio externo */
   box-sizing: border-box;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.mp-overlay *, 
+.mp-overlay *::before, 
+.mp-overlay *::after {
+  box-sizing: border-box;
+  font-family: inherit;
+  /* Reset de estilos comunes que suelen ser afectados por librerías externas */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  list-style: none;
+  text-decoration: none;
+  color: inherit;
+  line-height: normal;
+  vertical-align: baseline;
+  text-align: left;
+}
+
+.mp-overlay button,
+.mp-overlay input,
+.mp-overlay select,
+.mp-overlay textarea {
+  all: unset; /* Resetea estilos de formulario de navegadores y frameworks */
+  box-sizing: border-box;
+  font-family: inherit;
 }
 
 body.mp-lock-scroll {
