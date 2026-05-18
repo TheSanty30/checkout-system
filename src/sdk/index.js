@@ -466,7 +466,12 @@
             <div class="mp-title">Datos de la tarjeta</div>
             <div class="mp-subtitle">Ingresa los datos de tu tarjeta.</div>
 
-            <form id="form-checkout" autocomplete="on">
+            <div id="form-loading" class="mp-loading-state" style="padding: 30px 0;">
+              <div class="mp-spinner"></div>
+              <span>Cargando formulario seguro...</span>
+            </div>
+
+            <form id="form-checkout" autocomplete="on" style="display: none;">
               <div class="row mb-3">
                 <div class="col">
                   <div id="form-checkout__cardNumber" class="form-control mp-field mp-iframe-field"></div>
@@ -1136,9 +1141,19 @@
       }
       
       const formCheckout = modal.querySelector("#form-checkout");
-      if (formCheckout) {
-        formCheckout.style.pointerEvents = state.loading ? "none" : "";
-        formCheckout.style.opacity = state.loading ? "0.6" : "1";
+      const formLoading = modal.querySelector("#form-loading");
+      
+      if (formCheckout && formLoading) {
+        if (state.formReady) {
+          formCheckout.style.display = "block";
+          formLoading.style.display = "none";
+          
+          formCheckout.style.pointerEvents = state.loading ? "none" : "";
+          formCheckout.style.opacity = state.loading ? "0.6" : "1";
+        } else {
+          formCheckout.style.display = "none";
+          formLoading.style.display = "flex";
+        }
       }
 
       btn.disabled = state.loading;
