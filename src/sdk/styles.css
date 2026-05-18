@@ -418,16 +418,16 @@ body.mp-lock-scroll {
 }
 
 /* ─── FORM ───────────────────────────────────────────────────────── */
-.mp-field {
+.mp-overlay .mp-field {
   width: 100%;
   min-height: 46px;
   height: 46px;
   border: 1.5px solid var(--mp-border);
-  border-radius: var(--mp-border-radius);
+  border-radius: var(--mp-border-radius) !important;
   background: #fff;
   color: var(--mp-text);
   padding: 0 14px;
-  margin-bottom: 10px;
+  margin: 0;
   font-size: 14px;
   outline: none;
   box-shadow: none;
@@ -435,12 +435,12 @@ body.mp-lock-scroll {
   font-family: inherit;
 }
 
-.mp-field:focus {
+.mp-overlay .mp-field:focus {
   border-color: var(--mp-primary);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--mp-primary), transparent 90%);
 }
 
-.mp-field::placeholder {
+.mp-overlay .mp-field::placeholder {
   color: #b0bac9;
 }
 
@@ -471,16 +471,31 @@ body.mp-lock-scroll {
   min-height: 24px !important;
 }
 
-.mb-3 {
-  margin-bottom: 10px;
+.mp-overlay .mb-3 {
+  margin-bottom: 10px !important;
 }
 
 /* Scoped grid helpers */
+.mp-overlay form {
+  margin: 0;
+  padding: 0;
+}
+
 .mp-overlay .row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.mp-overlay .col,
+.mp-overlay .col-sm-12,
+.mp-overlay .col-sm-6,
+.mp-overlay .col-sm-4,
+.mp-overlay .col-sm-8 {
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .mp-overlay .col,

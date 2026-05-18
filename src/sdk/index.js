@@ -979,6 +979,7 @@
                 const initialResult = await response.json();
 
                 if (!response.ok) {
+                  console.error("Detalle del error desde el backend:", initialResult);
                   throw new Error(
                     initialResult?.message || "No se pudo procesar el pago",
                   );

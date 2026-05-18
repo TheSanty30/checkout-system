@@ -14,7 +14,6 @@ export async function createCardPayment(input) {
     issuer_id: input.issuerId || undefined,
     description: input.description || "Pago",
     external_reference: input.reference || undefined,
-    currency_id: input.currencyId || "PEN",
     payer: {
       email: input.payerEmail,
       ...(input.identificationType && input.identificationNumber

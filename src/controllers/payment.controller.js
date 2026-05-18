@@ -99,6 +99,7 @@ export async function createPayment(req, res) {
 
     return res.status(201).json(normalized || result);
   } catch (error) {
+    console.error("Error creating payment:", error);
     return res.status(500).json({
       message: "No se pudo crear el pago",
       error: error?.message || String(error),
